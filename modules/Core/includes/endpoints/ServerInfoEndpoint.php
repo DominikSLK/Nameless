@@ -135,7 +135,11 @@ class ServerInfoEndpoint extends KeyAuthEndpoint {
         $log = GroupSyncManager::getInstance()->broadcastChange(
             $user,
             MinecraftGroupSyncInjector::class,
-            $player['groups'] ?? []
+            GroupSyncManager::getInstance()->getModifiedGroups(
+                $player['groups'] ?? [],
+                GroupSyncManager::getInstance()->getInjectorByClass(MinecraftGroupSyncInjector::class),
+                $user,
+            )
         );
 
         if (count($log)) {

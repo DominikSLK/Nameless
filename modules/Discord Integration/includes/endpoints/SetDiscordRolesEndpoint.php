@@ -27,7 +27,11 @@ class SetDiscordRolesEndpoint extends KeyAuthEndpoint {
         $log_array = GroupSyncManager::getInstance()->broadcastChange(
             $user,
             DiscordGroupSyncInjector::class,
-            $_POST['roles'] ?? []
+            GroupSyncManager::getInstance()->getModifiedGroups(
+                $_POST['roles'] ?? [],
+                GroupSyncManager::getInstance()->getInjectorByClass(DiscordGroupSyncInjector::class),
+                $user,
+            )
         );
 
         if (count($log_array)) {

@@ -243,4 +243,23 @@ final class GroupSyncManager extends Instanceable {
 
         return null;
     }
+
+    public function getModifiedGroups(array $injector_groups, GroupSyncInjector $injector, User $user): array {
+        $modified = [];
+
+        foreach ($injector_groups as $injector_group) {
+            $column = $injector->getColumnName();
+            $nameless_groups = DB::getInstance()->query("SELECT DISTINCT website_group_id FROM nl2_group_sync WHERE {$column} = ?", [
+                $injector_group
+            ])->results();
+
+            foreach ($nameless_groups as $nameless_group) {
+                if (!in_array($nameless_group->website_group_id, $user->getAllGroupIds())) {
+                    $modified[] = $injector_group;
+                }
+            }
+        }
+
+        return $modified;
+    }
 }
