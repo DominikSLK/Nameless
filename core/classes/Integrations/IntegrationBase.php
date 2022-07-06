@@ -19,8 +19,8 @@ abstract class IntegrationBase {
     protected string $_name;
     protected ?int $_order;
 
-    public function __construct() {
-        $this->_db = DB::getInstance();
+    public function __construct(?DB $db = null) {
+        $this->_db = $db ?? DB::getInstance();
 
         $integration = $this->_db->query('SELECT * FROM nl2_integrations WHERE name = ?', [$this->_name]);
         if ($integration->count()) {

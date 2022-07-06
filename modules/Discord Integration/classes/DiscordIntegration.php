@@ -11,12 +11,12 @@ class DiscordIntegration extends IntegrationBase {
 
     protected Language $_language;
 
-    public function __construct(Language $language) {
+    public function __construct(Language $language, ?DB $db = null) {
         $this->_name = 'Discord';
         $this->_icon = 'fab fa-discord';
         $this->_language = $language;
 
-        parent::__construct();
+        parent::__construct($db);
     }
 
     public function onLinkRequest(User $user) {

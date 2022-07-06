@@ -5,6 +5,7 @@ parameters:
     excludePaths:
         - cache/
         - vendor/
+        - tests/
     # Ignore notices which are thrown due how nameless is written
     ignoreErrors:
         # prodecural programming :^)

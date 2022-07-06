@@ -7,7 +7,7 @@
  * @version 2.0.0-pr13
  * @license MIT
  */
-final class GroupSyncManager extends Instanceable {
+class GroupSyncManager extends Instanceable {
 
     /** @var GroupSyncInjector[] */
     private iterable $_injectors = [];
@@ -163,21 +163,22 @@ final class GroupSyncManager extends Instanceable {
 
         $namelessmc_injector = $this->getInjectorByClass(NamelessMCGroupSyncInjector::class);
         $namelessmc_column = $namelessmc_injector->getColumnName();
+        $sending_column = $sending_injector->getColumnName();
 
         // Get all group sync rules where this injector is not null
-        $rules = DB::getInstance()->query("SELECT * FROM nl2_group_sync WHERE {$sending_injector->getColumnName()} IS NOT NULL")->results();
+        $rules = $this->getRules($sending_injector);
         foreach ($rules as $rule) {
 
-            foreach ($this->getEnabledInjectors() as $injector) {
+            foreach ($this->getEnabledInjectors() as $injector_column => $injector) {
 
                 if ($injector == $sending_injector) {
                     continue;
                 }
 
-                $injector_column = $injector->getColumnName();
-                $injector_group_id = $rule->{$injector_column};
-                $sending_group_id = $rule->{$sending_injector->getColumnName()};
-                $nameless_group_id = $rule->{$namelessmc_column};
+                $rule = (array) $rule;
+                $injector_group_id = $rule[$injector_column];
+                $sending_group_id = $rule[$sending_column];
+                $nameless_group_id = $rule[$namelessmc_column];
 
                 // Skip this injector if it doesn't have a group id setup for this rule
                 if ($injector_group_id == null) {
@@ -206,10 +207,12 @@ final class GroupSyncManager extends Instanceable {
                     }
                 } else {
                     foreach ($rules as $item) {
-                        if (in_array($item->{$sending_injector->getColumnName()}, $group_ids)) {
-                            if ($item->{$namelessmc_column} == $rule->{$namelessmc_column}) {
-                                continue 2;
-                            }
+                        $item = (array) $item;
+                        if ($item[$namelessmc_column] != $nameless_group_id) {
+                            continue;
+                        }
+                        if (in_array($item[$sending_column], $group_ids)) {
+                            continue 2;
                         }
                     }
 
@@ -224,6 +227,10 @@ final class GroupSyncManager extends Instanceable {
         }
 
         return $logs;
+    }
+
+    public function getRules(GroupSyncInjector $sending_injector): array {
+        return DB::getInstance()->query("SELECT * FROM nl2_group_sync WHERE {$sending_injector->getColumnName()} IS NOT NULL")->results();
     }
 
     /**

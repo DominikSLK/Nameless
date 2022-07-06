@@ -30,7 +30,8 @@
         "maximebf/debugbar": "^1.18",
         "junker/debugbar-smarty": "^0.2",
         "hannesvdvreken/guzzle-debugbar": "^3.0",
-        "fakerphp/faker": "^1.19"
+        "fakerphp/faker": "^1.19",
+        "phpunit/phpunit": "^9"
     },
     "autoload": {
         "classmap": [
