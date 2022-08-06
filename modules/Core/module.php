@@ -2,7 +2,7 @@
 /*
  *  Made by Samerton
  *  https://github.com/NamelessMC/Nameless/
- *  NamelessMC version 2.0.0-pr13
+ *  NamelessMC version 2.0.0
  *
  *  License: MIT
  *
@@ -21,8 +21,8 @@ class Core_Module extends Module {
 
         $name = 'Core';
         $author = '<a href="https://samerton.me" target="_blank" rel="nofollow noopener">Samerton</a>';
-        $module_version = '2.0.0-pr13';
-        $nameless_version = '2.0.0-pr13';
+        $module_version = '2.0.0';
+        $nameless_version = '2.0.0';
 
         parent::__construct($this, $name, $author, $module_version, $nameless_version);
 
@@ -735,16 +735,16 @@ class Core_Module extends Module {
         if (defined('FRONT_END') || (defined('PANEL_PAGE') && str_contains(PANEL_PAGE, 'widget'))) {
             // Facebook
             $cache->setCache('social_media');
-            $fb_url = $cache->retrieve('facebook');
+            $fb_url = Util::getSetting('fb_url');
             if ($fb_url) {
                 $widgets->add(new FacebookWidget($smarty, $fb_url));
             }
 
             // Twitter
-            $twitter = $cache->retrieve('twitter');
+            $twitter = Util::getSetting('twitter_url');
 
             if ($twitter) {
-                $theme = $cache->retrieve('twitter_theme');
+                $theme = Util::getSetting('twitter_style');
                 $widgets->add(new TwitterWidget($smarty, $twitter, $theme));
             }
 

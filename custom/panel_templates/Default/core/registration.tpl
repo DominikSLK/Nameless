@@ -39,6 +39,21 @@
                             <!-- Success and Error Alerts -->
                             {include file='includes/alerts.tpl'}
 
+                            <!-- Captcha warning -->
+                            {if isset($CAPTCHA_WARNINGS)}
+                                <div class="alert alert-warning alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h5><i class="icon fas fa-exclamation-triangle"></i> {$WARNING}</h5>
+                                    <ul>
+                                        {foreach from=$CAPTCHA_WARNINGS item=warning}
+                                            <li>{$warning}</li>
+                                        {/foreach}
+                                    </ul>
+                                </div>
+                            {/if}
+
                             <form id="enableRegistration" action="" method="post">
                                 <div class="form-group custom-control custom-switch">
                                     <input type="hidden" name="enable_registration" value="0">
